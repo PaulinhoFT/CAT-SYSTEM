@@ -41,9 +41,39 @@
             <p>2. Selecione Mesh Enable e Submit.</p>
             <p>OBS: Na ONU Azul, a firmware precisa estar atualizada para esta opção.</p>
             <h2>Segue abaixo um video de como parear o Mesh.</h2>
-            <video autoplay loop>
+            <video id="meuVideo">
                 <source src="img/Configuração MESH.mp4" type="video/mp4">
-            </video>            
+                Seu navegador não suporta vídeos.
+            </video>
+        
+            <br>
+            <button onclick="playVideo()">Play Video</button>
+            <button onclick="pauseVideo()">Pause Video</button>
+            
+            <br>
+            <input type="range" id="barraProgresso" value="0" min="0" step="0.1" onchange="avancarVideo()">
+        
+            <script>
+                const video = document.getElementById("meuVideo");
+                const barra = document.getElementById("barraProgresso");
+        
+                video.addEventListener("timeupdate", () => {
+                    barra.value = video.currentTime;
+                    barra.max = video.duration;
+                });
+        
+                function playVideo() {
+                    video.play();
+                }
+        
+                function pauseVideo() {
+                    video.pause();
+                }
+        
+                function avancarVideo() {
+                    video.currentTime = barra.value;
+                }
+            </script>            
             </div>
         
             </div>
