@@ -9,9 +9,8 @@
     display: flex;
 }
 
-.logo {
-    width: 100%;
-    height: 15vh;
+body {
+    background-color: #F1F1F1;
 }
 
 .le {
@@ -26,20 +25,16 @@
     transition: 0,3s;
 }
 
-.barraesquerda {
-    background-color: #525151;
-    width: 15%;
-    height: 100vh;
-    overflow: auto;
-    padding-bottom: 20px;
-}
-
 .corpodireito {
-    background-color: #F1F1F1;
-    width: 85%;
+    background-color: #FFFFFF;
+    width: 84%;
     height: 100vh;
     padding: 20px;
     overflow: auto;
+    margin-left: 8%;
+    margin-right: 8%;
+    border-right: 1px solid #adadad;
+    border-left: 1px solid #adadad;
 }
 
 .corpodireito p {
@@ -295,4 +290,100 @@
 .Mesh video {
     width: 50%;
     height: 50vh;
+}
+
+/* ------------------ */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Ícone do menu */
+.hamburger {
+    font-size: 15px;
+    cursor: pointer;
+    padding: 10px;
+    background: #525151;
+    color: white;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    border-radius: 5px;
+    border: 1px solid #c2c2c2;
+}
+
+.hamburger:hover {
+    background-color: #535353;
+}
+
+/* Esconder o checkbox */
+#menu-toggle {
+    display: none;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Escondido por padrão */
+    width: 250px;
+    height: 100%;
+    background: #525151;
+    transition: left 0.3s ease;
+    padding-top: 60px;
+    overflow: auto;
+}
+
+/* Itens do menu */
+.menu-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-items li {
+    padding: 5px;
+    text-align: center;
+}
+
+.menu-items li a {
+    text-decoration: none;
+    color: white;
+    display: block;
+    font-size: 10px;
+}
+
+.menu-items li:hover {
+    background: #525151;
+}
+
+/* Quando o checkbox está marcado, exibe o menu */
+#menu-toggle:checked + .hamburger + .sidebar {
+    left: 0;
+}
+
+.voltar {
+    font-size: 15px;
+    cursor: pointer;
+    padding: 10px;
+    background: #525151;
+    color: white;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    border-radius: 5px;
+    border: 1px solid #c2c2c2;
+}
+
+.voltar:hover {
+    background-color: #535353;
+}
+
+.voltar a {
+    text-decoration: none;
+    color: white;
 }
