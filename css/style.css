@@ -35,8 +35,8 @@ body {
     overflow: auto;
     margin-left: 8%;
     margin-right: 8%;
-    border-right: 1px solid #adadad;
-    border-left: 1px solid #adadad;
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.137), 
+                10px 0 10px rgba(0, 0, 0, 0.137);
 }
 
 .corpodireito p {
