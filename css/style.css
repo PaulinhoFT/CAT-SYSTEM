@@ -318,7 +318,8 @@ body {
 }
 
 .hamburger:hover {
-    background-color: #535353;
+    background-color: #646363;
+    transition: 1s;
 }
 
 /* Esconder o checkbox */
@@ -382,7 +383,8 @@ body {
 }
 
 .voltar:hover {
-    background-color: #535353;
+    background-color: #646363;
+    transition: 1s;
 }
 
 .voltar a {
