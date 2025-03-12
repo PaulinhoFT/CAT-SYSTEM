@@ -403,10 +403,16 @@ body {
 .navbar a {
     display: flex;
     justify-content: end;
+    width: 170px;
     padding-right: 15px;
     padding-top: 17px;
     color: rgb(224, 224, 224);
     text-decoration: none;
+}
+
+.navbar li {
+    display: flex;
+    justify-content: end;
 }
 
 .navbar a:hover{
