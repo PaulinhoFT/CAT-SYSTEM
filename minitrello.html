@@ -118,53 +118,64 @@
   <!-- Firebase SDKs (v10+ modular via CDN) -->
   <script type="module">
     // 1) IMPORTS
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
-    import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, onSnapshot, serverTimestamp, query, where, orderBy, writeBatch, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+  import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, onSnapshot, serverTimestamp, query, where, orderBy, writeBatch, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
 
-    // 2) SUA CONFIGURAÇÃO — TROQUE PELOS DADOS DO SEU PROJETO
-    const firebaseConfig = {
-      apiKey: "AIzaSyDp9bA5SDrIbcMRU5RP8pFMDpEHVyy2cYk",
-  authDomain: "trello-4a099.firebaseapp.com",
-  projectId: "trello-4a099",
-  storageBucket: "trello-4a099.firebasestorage.app",
-  messagingSenderId: "261260246938",
-  appId: "1:261260246938:web:3f9747f5f22a18a679c423",
-  measurementId: "G-NN2XV21WSK"
-    };
+  // 2) SUA CONFIGURAÇÃO — TROQUE PELOS DADOS DO SEU PROJETO
+  const firebaseConfig = {
+    apiKey: "AIzaSyDp9bA5SDrIbcMRU5RP8pFMDpEHVyy2cYk",
+    authDomain: "trello-4a099.firebaseapp.com",
+    projectId: "trello-4a099",
+    storageBucket: "trello-4a099.firebasestorage.app",
+    messagingSenderId: "261260246938",
+    appId: "1:261260246938:web:3f9747f5f22a18a679c423",
+    measurementId: "G-NN2XV21WSK"
+  };
 
-    // 3) INIT
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  // 3) INIT
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-// 4) ELEMENTOS UI
-const userStatus = document.getElementById('userStatus');
-const titleInput = document.getElementById('titleInput');
-const descInput = document.getElementById('descInput');
-const statusInput = document.getElementById('statusInput');
-const addBtn = document.getElementById('addBtn');
+  // 4) ELEMENTOS UI
+  const userStatus = document.getElementById('userStatus');
+  const titleInput = document.getElementById('titleInput');
+  const descInput = document.getElementById('descInput');
+  const statusInput = document.getElementById('statusInput');
+  const addBtn = document.getElementById('addBtn');
 
-const cols = {
-  todo: document.getElementById('col-todo'),
-  doing: document.getElementById('col-doing'),
-  done: document.getElementById('col-done')
-};
+  const cols = {
+    todo: document.getElementById('col-todo'),
+    doing: document.getElementById('col-doing'),
+    done: document.getElementById('col-done')
+  };
 
-let uid = null;
-let unsubscribers = [];
+  let uid = null;
+  let unsubscribers = [];
 
-// 5) AUTH
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    uid = user.uid;
-    userStatus.textContent = `Conectado como ${uid.slice(0,6)}… (anônimo)`;
-    startRealtime();
-  } else {
-    userStatus.textContent = 'Conectando…';
-    await signInAnonymously(auth);
-  }
-});
+  // 5) AUTH COM E-MAIL
+  const email = "trixnet@oi.com";
+  const password = "123456789";
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      uid = user.uid;
+      userStatus.textContent = `Conectado como ${uid.slice(0,6)}…`;
+      startRealtime();
+    } else {
+      userStatus.textContent = 'Conectando…';
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        uid = userCredential.user.uid;
+        userStatus.textContent = `Conectado como ${uid.slice(0,6)}…`;
+        startRealtime();
+      } catch (err) {
+        console.error('Erro no login:', err);
+        userStatus.textContent = 'Erro ao conectar';
+      }
+    }
+  });
 
 // 6) ADICIONAR CARTÃO
 addBtn.addEventListener('click', async () => {
