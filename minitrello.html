@@ -3,370 +3,283 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mini Trello - TrixNet (EM TESTE)</title>
+  <title>Mini Trello - TrixNet</title>
   <style>
     :root {
-      --bg: #0f172a; /* slate-900 */
-      --card: #111827; /* gray-900 */
-      --muted: #94a3b8; /* slate-400 */
-      --text: #e5e7eb; /* gray-200 */
-      --primary: #22c55e; /* green-500 */
-      --accent: #6366f1; /* indigo-500 */
-      --danger: #ef4444; /* red-500 */
-      --col: #111827;
-      --col-border: #1f2937;
+      --bg: #ffffff;
+      --text: #000000;
+      --muted: #555;
+      --accent: #6366f1;
+      --danger: #ef4444;
       --shadow: 0 10px 25px rgba(0,0,0,.25);
+      --todo-color: #b71c1c;
+      --doing-color: #f57f17;
+      --done-color: #1b5e20;
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; }
     body {
-      margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
-      background: radial-gradient(1200px 800px at 80% -10%, #1f2937 0%, var(--bg) 60%);
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
       color: var(--text);
     }
     header {
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding: 18px 22px; position: sticky; top:0; backdrop-filter: blur(8px);
-      background: linear-gradient(180deg, rgba(15,23,42,.9), rgba(15,23,42,.55));
-      border-bottom: 1px solid #0b1220;
-      z-index: 5;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 22px; border-bottom: 1px solid #ddd;
+      background: #f5f5f5;
     }
-    .brand { display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.3px; }
-    .dot { width:10px; height:10px; border-radius:50%; background:var(--primary); box-shadow:0 0 0 6px rgba(34,197,94,.15); }
-    .env { font-size:12px; color:var(--muted) }
-
-    .wrap { max-width:1200px; margin: 0 auto; padding: 18px 22px 30px; }
-
-    .toolbar { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: bold; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: green; }
+    .wrap { max-width: 1200px; margin: auto; padding: 18px; }
+    .toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
     .toolbar input, .toolbar textarea, .toolbar select {
-      background: #0b1220; color: var(--text); border: 1px solid #1f2937; border-radius: 10px;
-      padding: 10px 12px; outline: none; min-width: 0;
+      padding: 8px; border: 1px solid #ccc; border-radius: 6px;
     }
-    .toolbar textarea { resize: vertical; min-height: 42px; max-height: 120px; }
-    .toolbar button { background: var(--accent); border: 0; padding: 10px 14px; border-radius: 12px; color: #fff; font-weight: 600; cursor:pointer; box-shadow: var(--shadow); }
-    .toolbar button:disabled { opacity:.5; cursor:not-allowed }
-
-    .board { display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; align-items:start; }
+    .toolbar button {
+      background: var(--accent); border: none; padding: 8px 14px;
+      border-radius: 6px; color: white; font-weight: bold; cursor: pointer;
+    }
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
     @media (max-width: 900px) { .board { grid-template-columns: 1fr; } }
-
-    .column { background: var(--col); border: 1px solid var(--col-border); border-radius: 16px; padding: 12px; min-height: 220px; box-shadow: var(--shadow); }
-    .column h3 { margin: 2px 4px 10px; font-size: 14px; text-transform:uppercase; letter-spacing:.1em; color: var(--muted); }
-    .column droppable { display:block; }
-
-    .dropzone { min-height: 120px; border-radius: 12px; padding: 6px; transition: background .2s, outline .2s; }
-    .dropzone.dragover { outline:2px dashed #374151; background: rgba(99,102,241,.06); }
-
-    .card { background: linear-gradient(180deg, #0f172a, #0b1220); border:1px solid #1f2937; color:var(--text); border-radius: 14px; padding: 10px 12px; margin: 8px 4px; cursor: grab; box-shadow: var(--shadow); display:flex; flex-direction:column; gap:6px; }
-    .card:active { cursor: grabbing }
-    .card-title { font-weight: 700; font-size: 14px; }
-    .card-desc { font-size: 13px; color: var(--muted); white-space:pre-wrap }
-    .card-footer { display:flex; justify-content:space-between; align-items:center; gap:8px; }
-    .meta { font-size: 11px; color: var(--muted); }
-    .btn-icon { background: transparent; border:0; color: var(--muted); cursor:pointer; padding:6px; border-radius:8px; }
-    .btn-icon:hover { color: #fff; background:#0b1220; }
-    .danger { color: var(--danger); }
-
-    .auth { font-size:12px; color:var(--muted) }
-    .hint { color: var(--muted); font-size: 12px; margin-top:8px }
-    .small { font-size: 12px }
-    .chip { background:#0b1220; border:1px solid #1f2937; padding:4px 8px; border-radius:999px; font-size:12px; }
+    .column { border: 1px solid #ccc; border-radius: 8px; padding: 12px; }
+    .column h3 { margin-top: 0; }
+    .search-input { width: 100%; padding: 6px; margin-bottom: 8px; border: 1px solid #ccc; border-radius: 6px; }
+    .dropzone { min-height: 50px; }
+    .card {
+      border-radius: 6px; padding: 10px; margin-bottom: 8px;
+      color: white; box-shadow: var(--shadow); cursor: grab;
+    }
+    .card-title { font-weight: bold; }
+    .card-footer { display: flex; justify-content: space-between; font-size: 12px; }
+    .btn-icon { background: transparent; border: none; cursor: pointer; margin-left: 4px; font-size: 14px; }
+    .btn-icon:hover { opacity: 0.8; }
   </style>
 </head>
 <body>
   <header>
     <div class="brand">
       <span class="dot"></span>
-      <div>
-        <div>Mini Trello - TrixNet (EM TESTE)</div>
-      </div>
+      <span>Mini Trello - TrixNet</span>
     </div>
-    <div class="auth">
-      <span id="userStatus">Conectando…</span>
-    </div>
+    <div id="userStatus">Conectando...</div>
   </header>
 
   <div class="wrap">
-    <section class="toolbar" aria-label="Adicionar cartão">
-      <input id="titleInput" placeholder="Título da anotação" required />
-      <textarea id="descInput" placeholder="Descrição (opcional)" style="width: 360px"></textarea>
-      <select id="statusInput" title="Coluna inicial">
+    <section class="toolbar">
+      <input id="titleInput" placeholder="Título" />
+      <textarea id="descInput" placeholder="Descrição"></textarea>
+      <select id="statusInput">
         <option value="todo">A Fazer</option>
         <option value="doing">Fazendo</option>
         <option value="done">Concluído</option>
       </select>
       <button id="addBtn">Adicionar</button>
-      <span class="hint">Dica: arraste cartões entre colunas. Tudo salva em tempo real.</span>
     </section>
 
-    <section class="board" aria-label="Quadro">
+    <section class="board">
       <div class="column" data-status="todo">
         <h3>A Fazer</h3>
-        <div class="dropzone" id="col-todo" aria-label="A Fazer"></div>
+        <input class="search-input" placeholder="Pesquisar..." oninput="filterCards('todo', this.value)">
+        <div class="dropzone" id="col-todo"></div>
       </div>
       <div class="column" data-status="doing">
         <h3>Fazendo</h3>
-        <div class="dropzone" id="col-doing" aria-label="Fazendo"></div>
+        <input class="search-input" placeholder="Pesquisar..." oninput="filterCards('doing', this.value)">
+        <div class="dropzone" id="col-doing"></div>
       </div>
       <div class="column" data-status="done">
         <h3>Concluído</h3>
-        <div class="dropzone" id="col-done" aria-label="Concluído"></div>
+        <input class="search-input" placeholder="Pesquisar..." oninput="filterCards('done', this.value)">
+        <div class="dropzone" id="col-done"></div>
       </div>
     </section>
-
   </div>
 
-  <!-- Firebase SDKs (v10+ modular via CDN) -->
   <script type="module">
-    // 1) IMPORTS
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
-  import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, onSnapshot, serverTimestamp, query, where, orderBy, writeBatch, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+    import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot, serverTimestamp, updateDoc, writeBatch } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
 
-  // 2) SUA CONFIGURAÇÃO — TROQUE PELOS DADOS DO SEU PROJETO
-  const firebaseConfig = {
-    apiKey: "AIzaSyDp9bA5SDrIbcMRU5RP8pFMDpEHVyy2cYk",
-    authDomain: "trello-4a099.firebaseapp.com",
-    projectId: "trello-4a099",
-    storageBucket: "trello-4a099.firebasestorage.app",
-    messagingSenderId: "261260246938",
-    appId: "1:261260246938:web:3f9747f5f22a18a679c423",
-    measurementId: "G-NN2XV21WSK"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyDp9bA5SDrIbcMRU5RP8pFMDpEHVyy2cYk",
+      authDomain: "trello-4a099.firebaseapp.com",
+      projectId: "trello-4a099",
+      storageBucket: "trello-4a099.appspot.com",
+      messagingSenderId: "261260246938",
+      appId: "1:261260246938:web:3f9747f5f22a18a679c423",
+    };
 
-  // 3) INIT
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  // 4) ELEMENTOS UI
-  const userStatus = document.getElementById('userStatus');
-  const titleInput = document.getElementById('titleInput');
-  const descInput = document.getElementById('descInput');
-  const statusInput = document.getElementById('statusInput');
-  const addBtn = document.getElementById('addBtn');
+    const userStatus = document.getElementById('userStatus');
+    const titleInput = document.getElementById('titleInput');
+    const descInput = document.getElementById('descInput');
+    const statusInput = document.getElementById('statusInput');
+    const addBtn = document.getElementById('addBtn');
 
-  const cols = {
-    todo: document.getElementById('col-todo'),
-    doing: document.getElementById('col-doing'),
-    done: document.getElementById('col-done')
-  };
+    const cols = {
+      todo: document.getElementById('col-todo'),
+      doing: document.getElementById('col-doing'),
+      done: document.getElementById('col-done')
+    };
 
-  let uid = null;
-  let unsubscribers = [];
+    let uid = null;
+    let allCards = { todo: [], doing: [], done: [] };
+    let draggedCardId = null;
 
-  // 5) AUTH COM E-MAIL
-  const email = "trixnet@oi.com";
-  const password = "123456789";
-
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      uid = user.uid;
-      userStatus.textContent = `Conectado como ${uid.slice(0,6)}…`;
-      startRealtime();
-    } else {
-      userStatus.textContent = 'Conectando…';
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        uid = userCredential.user.uid;
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        uid = user.uid;
         userStatus.textContent = `Conectado como ${uid.slice(0,6)}…`;
         startRealtime();
-      } catch (err) {
-        console.error('Erro no login:', err);
-        userStatus.textContent = 'Erro ao conectar';
+      } else {
+        try {
+          const cred = await signInWithEmailAndPassword(auth, "trixnet@oi.com", "123456789");
+          uid = cred.user.uid;
+          userStatus.textContent = `Conectado como ${uid.slice(0,6)}…`;
+          startRealtime();
+        } catch (err) {
+          console.error(err);
+          userStatus.textContent = 'Erro ao conectar';
+        }
       }
-    }
-  });
-
-// 6) ADICIONAR CARTÃO
-addBtn.addEventListener('click', async () => {
-  const title = titleInput.value.trim();
-  const description = descInput.value.trim();
-  const status = statusInput.value;
-  if (!title || !uid) return;
-
-  try {
-    const colRef = collection(db, 'users', uid, 'cards');
-    await addDoc(colRef, {
-      title,
-      description,
-      status,
-      order: Date.now(),
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
-    });
-    titleInput.value = '';
-    descInput.value = '';
-    statusInput.value = 'todo';
-  } catch (err) {
-    console.error('Erro ao criar card:', err);
-  }
-});
-
-// 7) REALTIME LISTENERS AJUSTADOS
-function startRealtime() {
-  if (!uid) return;
-
-  // limpa listeners antigos
-  unsubscribers.forEach(u => u());
-  unsubscribers = [];
-
-  // listener para todos os cards do usuário
-  const qRef = collection(db, 'users', uid, 'cards');
-
-  const unsub = onSnapshot(qRef, (snap) => {
-    // organiza por status
-    const cardsByStatus = { todo: [], doing: [], done: [] };
-    snap.docs.forEach(d => {
-      const data = { id: d.id, ...d.data() };
-      if (!cardsByStatus[data.status]) data.status = 'todo'; // fallback
-      cardsByStatus[data.status].push(data);
     });
 
-    // ordena por order
-    Object.keys(cardsByStatus).forEach(status => {
-      cardsByStatus[status].sort((a,b) => (a.order||0) - (b.order||0));
-      renderColumn(status, cardsByStatus[status]);
+    addBtn.addEventListener('click', async () => {
+      if (!titleInput.value.trim()) return;
+      await addDoc(collection(db, 'users', uid, 'cards'), {
+        title: titleInput.value.trim(),
+        description: descInput.value.trim(),
+        status: statusInput.value,
+        order: Date.now(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+      titleInput.value = '';
+      descInput.value = '';
+      statusInput.value = 'todo';
     });
-  }, (err) => {
-    console.error('Erro no snapshot:', err);
-  });
 
-  unsubscribers.push(unsub);
-}
-
-// 8) RENDER CARDS
-function renderColumn(status, items) {
-  const zone = cols[status];
-  if (!zone) return;
-  zone.innerHTML = '';
-  if (!items.length) {
-    const emptyMsg = document.createElement('div');
-    emptyMsg.textContent = 'Nenhum card';
-    emptyMsg.style.color = '#555';
-    emptyMsg.style.fontSize = '13px';
-    emptyMsg.style.padding = '8px';
-    zone.appendChild(emptyMsg);
-  } else {
-    items.forEach(item => zone.appendChild(createCardEl(item)));
-  }
-}
-
-function createCardEl(card) {
-  const el = document.createElement('div');
-  el.className = 'card';
-  el.draggable = true;
-  el.dataset.id = card.id;
-  el.dataset.status = card.status;
-
-  el.addEventListener('dragstart', (e) => {
-    e.dataTransfer.setData('text/plain', card.id);
-    setTimeout(() => el.classList.add('dragging'), 0);
-  });
-  el.addEventListener('dragend', () => el.classList.remove('dragging'));
-
-  const title = document.createElement('div');
-  title.className = 'card-title';
-  title.textContent = card.title;
-
-  const desc = document.createElement('div');
-  desc.className = 'card-desc';
-  if (card.description) desc.textContent = card.description;
-
-  const footer = document.createElement('div');
-  footer.className = 'card-footer';
-
-  const meta = document.createElement('div');
-  meta.className = 'meta';
-  meta.textContent = new Date(card.order).toLocaleString();
-
-  const del = document.createElement('button');
-  del.className = 'btn-icon danger';
-  del.innerHTML = '🗑️';
-  del.title = 'Excluir cartão';
-  del.addEventListener('click', async () => {
-    if (!confirm('Excluir este cartão?')) return;
-    await deleteDoc(doc(db, 'users', uid, 'cards', card.id));
-  });
-
-  footer.appendChild(meta);
-  footer.appendChild(del);
-
-  el.appendChild(title);
-  if (card.description) el.appendChild(desc);
-  el.appendChild(footer);
-
-  return el;
-}
-
-// 9) DRAG & DROP
-Object.values(cols).forEach(zone => {
-  zone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    zone.classList.add('dragover');
-    const afterEl = getDragAfterElement(zone, e.clientY);
-    const dragging = document.querySelector('.dragging');
-    if (!dragging) return;
-    if (afterEl == null) {
-      zone.appendChild(dragging);
-    } else {
-      zone.insertBefore(dragging, afterEl);
+    function startRealtime() {
+      onSnapshot(collection(db, 'users', uid, 'cards'), (snap) => {
+        let grouped = { todo: [], doing: [], done: [] };
+        snap.forEach(d => {
+          let data = { id: d.id, ...d.data() };
+          grouped[data.status || 'todo'].push(data);
+        });
+        // Ordena por "order"
+        Object.keys(grouped).forEach(s => grouped[s].sort((a,b) => a.order - b.order));
+        allCards = grouped;
+        renderAll();
+      });
     }
-  });
-  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-  zone.addEventListener('drop', async (e) => {
-    e.preventDefault();
-    zone.classList.remove('dragover');
-    const cardId = e.dataTransfer.getData('text/plain');
-    const newStatus = statusFromZoneId(zone.id);
-    await persistOrderAndStatus(zone, newStatus, cardId);
-  });
-});
 
-function statusFromZoneId(id) {
-  if (id.endsWith('todo')) return 'todo';
-  if (id.endsWith('doing')) return 'doing';
-  if (id.endsWith('done')) return 'done';
-  return 'todo';
-}
-
-function getDragAfterElement(container, y) {
-  const draggableElements = [...container.querySelectorAll('.card:not(.dragging)')];
-  return draggableElements.reduce((closest, child) => {
-    const box = child.getBoundingClientRect();
-    const offset = y - box.top - box.height / 2;
-    if (offset < 0 && offset > closest.offset) {
-      return { offset, element: child };
-    } else {
-      return closest;
+    function renderAll() {
+      Object.keys(cols).forEach(status => renderColumn(status, allCards[status]));
     }
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
-}
 
-async function persistOrderAndStatus(zone, newStatus, movedId) {
-  if (!uid) return;
-  const batch = writeBatch(db);
-  const movedRef = doc(db, 'users', uid, 'cards', movedId);
-  batch.set(movedRef, { status: newStatus, updatedAt: serverTimestamp() }, { merge: true });
+    function renderColumn(status, items) {
+      cols[status].innerHTML = '';
+      items.forEach(card => cols[status].appendChild(createCardEl(card)));
+    }
 
-  let order = 0;
-  zone.querySelectorAll('.card').forEach((el) => {
-    const id = el.dataset.id;
-    const ref = doc(db, 'users', uid, 'cards', id);
-    batch.set(ref, { order: ++order * 100, status: newStatus, updatedAt: serverTimestamp() }, { merge: true });
-  });
-  await batch.commit();
-}
+    function createCardEl(card) {
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.style.background = card.status === 'todo' ? 'var(--todo-color)' :
+                            card.status === 'doing' ? 'var(--doing-color)' : 'var(--done-color)';
+      el.draggable = true;
+      el.dataset.id = card.id;
+      el.dataset.status = card.status;
 
-// 10) UTILITÁRIO: apagar todos os cards
-window.deleteAll = async function() {
-  if (!uid || !confirm('Apagar TODOS os cartões da sua conta anônima?')) return;
-  const qRef = collection(db, 'users', uid, 'cards');
-  const snap = await getDocs(qRef);
-  const batch = writeBatch(db);
-  snap.forEach(d => batch.delete(d.ref));
-  await batch.commit();
-  alert('Apagado.');
-}
+      el.addEventListener('dragstart', e => {
+        draggedCardId = card.id;
+        e.dataTransfer.effectAllowed = "move";
+        setTimeout(() => el.style.display = 'none', 0);
+      });
+
+      el.addEventListener('dragend', () => {
+        el.style.display = '';
+        draggedCardId = null;
+      });
+
+      el.innerHTML = `
+        <div class="card-title">${card.title}</div>
+        ${card.description ? `<div>${card.description}</div>` : ''}
+        <div class="card-footer">
+          <span>${card.createdAt?.toDate ? card.createdAt.toDate().toLocaleString() : ''}</span>
+          <span>
+            <button class="btn-icon edit-btn">✏️</button>
+            <button class="btn-icon delete-btn">🗑️</button>
+          </span>
+        </div>
+      `;
+
+      el.querySelector('.delete-btn').onclick = async () => {
+        if (confirm('Excluir este cartão?'))
+          await deleteDoc(doc(db, 'users', uid, 'cards', card.id));
+      };
+
+      el.querySelector('.edit-btn').onclick = async () => {
+        let newTitle = prompt('Novo título:', card.title);
+        if (newTitle === null) return;
+        let newDesc = prompt('Nova descrição:', card.description || '');
+        await updateDoc(doc(db, 'users', uid, 'cards', card.id), {
+          title: newTitle.trim(),
+          description: newDesc.trim(),
+          updatedAt: serverTimestamp()
+        });
+      };
+
+      return el;
+    }
+
+    // Eventos de drop com reordenação
+    Object.values(cols).forEach(dropzone => {
+      dropzone.addEventListener('dragover', e => {
+        e.preventDefault();
+        dropzone.style.background = '#f0f0f0';
+      });
+
+      dropzone.addEventListener('dragleave', () => {
+        dropzone.style.background = '';
+      });
+
+      dropzone.addEventListener('drop', async e => {
+        e.preventDefault();
+        dropzone.style.background = '';
+
+        const newStatus = dropzone.parentElement.dataset.status;
+        let cardsInColumn = [...dropzone.querySelectorAll('.card')].map(c => c.dataset.id);
+
+        // Se o card arrastado ainda não está na lista, significa que veio de outra coluna
+        if (!cardsInColumn.includes(draggedCardId)) {
+          cardsInColumn.push(draggedCardId);
+        }
+
+        // Reordena no Firestore
+        const batch = writeBatch(db);
+        cardsInColumn.forEach((id, index) => {
+          const ref = doc(db, 'users', uid, 'cards', id);
+          batch.update(ref, {
+            status: newStatus,
+            order: index,
+            updatedAt: serverTimestamp()
+          });
+        });
+        await batch.commit();
+      });
+    });
+
+    window.filterCards = (status, term) => {
+      term = term.toLowerCase();
+      renderColumn(status, allCards[status].filter(c =>
+        c.title.toLowerCase().includes(term) ||
+        (c.description || '').toLowerCase().includes(term)
+      ));
+    };
   </script>
 </body>
 </html>
